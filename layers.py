@@ -112,3 +112,31 @@ class StyleAdaptiveLayerNorm(nn.Module):
         out = gamma * out + beta
         
         return out
+    
+class AdaINLayer(nn.Module):
+    def __init__(self, in_channels):
+        """
+        Adaptive Instance Normalization (AdaIN) layer
+        
+        Parameters:
+        in_channels: The number of channels in the input and condition feature maps.
+        """
+        super(AdaINLayer, self).__init__()
+        self.in_channels = in_channels
+        self.IN = nn.InstanceNorm1d(in_channels, affine=False)
+
+    def forward(self, x, c):
+        """
+        Parameters:
+        x (Tensor): The input feature maps with shape [batch_size, in_channels, time].
+        c (Tensor): The conditioning input with shape [batch_size, in_channels, time].
+        
+        Returns:
+        Tensor: The modulated feature maps with the same shape as input x.
+        """
+        x = self.IN(x)
+        
+        gamma = c.var(dim=1, keepdim=True)
+        beta = c.mean(dim=1, keepdim=True)
+        
+        return gamma * x + beta

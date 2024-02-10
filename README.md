@@ -15,6 +15,7 @@ This repository presents PyTorch implementations of various methods to inject ad
 - **FiLM Layer**: Incorporate the [FiLM: Visual Reasoning with a General Conditioning Layer](https://arxiv.org/abs/1709.07871) into your models to dynamically influence their behavior based on external information.
 - **Conditional Layer Norm**: Utilize the Conditional Layer Norm strategy from [AdaSpeech](https://arxiv.org/abs/2103.00993) for adaptive and context-aware normalization.
 - **Style-Adaptive Layer Normalization**: Utilize the Style-Adaptive Layer Normalization from [Meta-StyleSpeech](https://arxiv.org/abs/2106.03153) for conditioning the normalization process with external data.
+- **Adaptive Instance Normalization (AdaIN)**: Incorporate the [Adaptive Instance Normalization](https://arxiv.org/abs/1703.06868) for fast and flexible style transfer.
 
 
 ## Usage 📘
@@ -56,4 +57,18 @@ c = torch.randn((16,1,320)) # [batch_size, 1, cond_channels]
 
 model = StyleAdaptiveLayerNorm(256, 320)
 output = model(x, c) # [batch_size, time, in_channels]
+```
+
+### Adaptive Instance Normalization (AdaIN)
+
+```python
+import torch
+from layers import AdaINLayer
+
+# x and c should have the same shape
+x = torch.randn((16,256,37)) # [batch_size, in_channels, time]
+c = torch.randn((16,256,37)) # [batch_size, in_channels, time]
+
+model = AdaINLayer(256)
+output = model(x, c) # [batch_size, in_channels, time]
 ```
